@@ -9,7 +9,7 @@ using Utilities;
 //hello
 //How are you?
 //i'm fine
-//No problems, no problems =)
+//No problems, or yes problems
 namespace Controller
 {
     public class BotController
