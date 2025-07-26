@@ -21,9 +21,7 @@ namespace UnitBrains.Player
             {
                 return;
             }
-            //b. Вызов метода private void IncreaseTemperature()
-            IncreaseTemperature();
-
+            
             //2.a Увеличение снарядов
             int MissileCount = GetTemperature(); // кол-во снарядов = текущей температуре
             for (int i = 0; i < MissileCount; i++) ;
@@ -31,7 +29,8 @@ namespace UnitBrains.Player
                 var projectile = CreateProjectile(forTarget);
                 AddProjectileToList(projectile, intoList);
             }
-            
+            //b. Вызов метода private void IncreaseTemperature()
+            IncreaseTemperature();
         }
 
         public override Vector2Int GetNextStep()
@@ -40,17 +39,28 @@ namespace UnitBrains.Player
         }
 
         protected override List<Vector2Int> SelectTargets()
+
         {
-            ///////////////////////////////////////
-            // Homework 1.4 (1st block, 4rd module)
-            ///////////////////////////////////////
+
             List<Vector2Int> result = GetReachableTargets();
-            while (result.Count > 1)
+            if (result.Count == 0)
+                return result;
+
+            Vector2Int target = result[0]; // Изначальная цель
+            var minDistance = DistanceToOwnBase(target); // с float не пробовал, но думаю разницы нет
+
+            for (int i = 1; i < result.Count; i++)
             {
-                result.RemoveAt(result.Count - 1);
+                var distance = DistanceToOwnBase(result[i]); // Ближайшая цель на начало расчета
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    target = result[i];
+                }
             }
+            result.Clear(); //очистить
+            result.Add(target); //добавить
             return result;
-            ///////////////////////////////////////
         }
 
         public override void Update(float deltaTime, float time)
